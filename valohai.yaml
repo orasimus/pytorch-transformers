@@ -1,0 +1,34 @@
+---
+
+- step:
+    name: Execute python examples/run_glue.py
+    image: pytorch/pytorch:nightly-devel-cuda10.0-cudnn7
+    command:
+      - python /valohai/inputs/download_glue_data/download_glue_data.py --tasks=SST
+      - pip install -e .
+      - pip install -r examples/requirements.txt
+      - python examples/run_glue.py {parameters} --do_train
+    inputs:
+      - name: download_glue_data
+        default: https://gist.githubusercontent.com/W4ngatang/60c2bdb54d156a41194446737ce03e2e/raw/17b8dd0d724281ed7c3b2aeeda662b92809aadd5/download_glue_data.py
+    parameters:
+      - name: data_dir
+        pass-as: --data_dir={v}
+        type: string
+        default: glue_data/SST-2
+      - name: model_type
+        pass-as: --model_type={v}
+        type: string
+        default: bert
+      - name: model_name_or_path
+        pass-as: --model_name_or_path={v}
+        type: string
+        default: bert-base-uncased
+      - name: task_name
+        pass-as: --task_name={v}
+        type: string
+        default: sst-2
+      - name: output_dir
+        pass-as: --output_dir={v}
+        type: string
+        default: /valohai/outputs
